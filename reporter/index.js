@@ -5,25 +5,30 @@ const yaml = require("js-yaml");
 const path = require("path");
 const pug = require("pug");
 const HTMLtoDOCX = require("html-to-docx");
-const { spawnSync } = require('node:child_process');
+const { spawnSync } = require("node:child_process");
 const puppeteer = require("puppeteer");
 
-const marked = require('marked');
+const marked = require("marked");
 // it is surprising that https://github.com/jstransformers/jstransformer-marked picks up this object (undocumented API)
 // source of this call: https://github.com/markedjs/marked-custom-heading-id/blob/main/src/index.js (MIT License, Copyright (c) 2021 @markedjs)
-marked.use({renderer: {
-      heading(text, level, raw, slugger) {
-        // WEC patch: add \:
-        const headingIdRegex = /(?: +|^)\{#([a-z][\:\w-]*)\}(?: +|$)/i;
-        const hasId = text.match(headingIdRegex);
-        if (!hasId) {
-          // fallback to original heading renderer
-          return false;
-        }
-        return `<h${level} id="${hasId[1]}">${text.replace(headingIdRegex, '')}</h${level}>\n`;
+marked.use({
+  renderer: {
+    heading(text, level, raw, slugger) {
+      // WEC patch: add \:
+      const headingIdRegex = /(?: +|^)\{#([a-z][\:\w-]*)\}(?: +|$)/i;
+      const hasId = text.match(headingIdRegex);
+      if (!hasId) {
+        // fallback to original heading renderer
+        return false;
       }
-}});
-marked.use(require('marked-smartypants').markedSmartypants());
+      return `<h${level} id="${hasId[1]}">${text.replace(
+        headingIdRegex,
+        ""
+      )}</h${level}>\n`;
+    },
+  },
+});
+marked.use(require("marked-smartypants").markedSmartypants());
 
 function reporter(args) {
   const c = {
@@ -82,7 +87,7 @@ function reporter(args) {
         inlineCSS: fs.readFileSync(
           require.resolve("github-markdown-css/github-markdown.css")
         ),
-        filterOptions: {marked: {}},
+        filterOptions: { marked: {} },
       })
     );
 
@@ -95,17 +100,29 @@ function reporter(args) {
     }
   };
 
-  c.convertHtmlToPdf = async function (htmlfilename = "inspection.html", pdffilename = "inspection.pdf") {
+  c.convertHtmlToPdf = async function (
+    htmlfilename = "inspection.html",
+    pdffilename = "inspection.pdf"
+  ) {
     if (c.args.pdf && c.args.output) {
+      
+      await fs.copyFile(
+        path.join(__dirname, "../assets") + "/aesirx_logo.png",
+        path.join(c.args.output, "aesirx_logo.png")
+      );
+
       const browser = await puppeteer.launch({
         // https://developer.chrome.com/articles/new-headless/.
-        headless: 'new',
+        headless: "new",
       });
       const pages = await browser.pages();
-      await pages[0].goto("file://" + path.resolve(path.join(c.args.output, htmlfilename)), {waitUntil: 'networkidle0'});
+      await pages[0].goto(
+        "file://" + path.resolve(path.join(c.args.output, htmlfilename)),
+        { waitUntil: "networkidle0" }
+      );
       await pages[0].pdf({
         path: path.resolve(path.join(c.args.output, pdffilename)),
-        format: 'A4',
+        format: "A4",
         printBackground: true,
         displayHeaderFooter: true,
         headerTemplate: `
@@ -119,12 +136,12 @@ function reporter(args) {
           </div>
         `,
         // this is needed to prevent content from being placed over the footer
-        margin: { top: '1.5cm', bottom: '1cm' },
-      })
+        margin: { top: "1.5cm", bottom: "1cm" },
+      });
       await browser.close();
     }
   };
-  
+
   c.generateOfficeDoc = async function (
     data,
     filename = "inspection.docx",
@@ -148,31 +165,37 @@ function reporter(args) {
           inlineCSS: fs.readFileSync(
             require.resolve("github-markdown-css/github-markdown.css")
           ),
-          filterOptions: {marked: {}},
+          filterOptions: { marked: {} },
         })
       );
 
-      if(c.args.usePandoc) {
+      if (c.args.usePandoc) {
         // console.warn("Using pandoc to generate", filename);
-        let ret = spawnSync('pandoc', ['-f', 'html', '--number-sections', '--toc', '--output', filename], {
-          cwd: c.args.output,
-          input: html_dump,
-          encoding: 'utf8',
-        });
-        if(ret[2]) {
+        let ret = spawnSync(
+          "pandoc",
+          ["-f", "html", "--number-sections", "--toc", "--output", filename],
+          {
+            cwd: c.args.output,
+            input: html_dump,
+            encoding: "utf8",
+          }
+        );
+        if (ret[2]) {
           console.log(ret[2]);
         }
       } else {
-        if(filename.endsWith(".odt")) {
-          console.error("To generate .odt, you must have pandoc installed and specify --use-pandoc.");
+        if (filename.endsWith(".odt")) {
+          console.error(
+            "To generate .odt, you must have pandoc installed and specify --use-pandoc."
+          );
           process.exit(1);
         }
-        
+
         // console.warn("Using NPM html-to-docx to generate", filename);
         const documentOptions = {
           // decodeUnicode: true,
           orientation: "portrait",
-          pageSize: {width: "21.0cm", height: "29.7cm"},
+          pageSize: { width: "21.0cm", height: "29.7cm" },
           pageNumber: true,
           // lineNumber: true,
           // lineNumberOptions: {countBy: 5},
@@ -180,7 +203,12 @@ function reporter(args) {
           lang: "en-UK",
           creator: `EDPS Website Evidence Collector v${data.script.version.npm} using NPM html-to-docx`,
         };
-        const fileBuffer = await HTMLtoDOCX(html_dump, null, documentOptions, null);
+        const fileBuffer = await HTMLtoDOCX(
+          html_dump,
+          null,
+          documentOptions,
+          null
+        );
         fs.writeFileSync(path.join(c.args.output, filename), fileBuffer);
       }
     }
@@ -189,6 +217,7 @@ function reporter(args) {
   c.saveSource = function (source, filename = "source.html") {
     if (c.args.output) {
       fs.writeFileSync(path.join(c.args.output, filename), source);
+
     }
   };
 

@@ -19,7 +19,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
         min-width: 200px;
         max-width: 980px;
         margin: 0 auto;
-        padding: 45px;
+ 
       }
       
       .markdown-body table {
@@ -105,9 +105,23 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
         color: white;
       }
 
+      .bg {
+        background-color: #171e3a;
+        color: #FFFFFF;
+        padding: 45px;
+      }
+
+      #aesirx_logo img{
+        background-color: unset;
+      }
+
       @page {
         size: A4;
         margin: 0;
+      }
+
+      .page2 {
+        padding: 45px;
       }
       
       @media print {
@@ -123,27 +137,30 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
           page-break-after: always;
           position: relative;
         }
+
+       
       }
 
   body.markdown-body: article
 
     div.page
-      div#aesirx_logo
-        include /aesirx_logo.svg
+      div.bg
+        div#aesirx_logo
+          img(src=`${jsondir}/aesirx_logo.png` style="height: 66px;width: 255px;")
 
-      div.content
-          span.label High Risk
+        div.content
+            span.label High Risk
 
-          div.link #{uri_ins}
-          div.link Violations found!
-          p During the browsing, the tool gathers evidence and runs a number of checks. It takes screenshots from the browser to identify potential cookie banners. It tests the use of HTTPS/SSL to check whether the website enforces a HTTPS connection. Then, the evidence collection tool scans the first web page for links to common social media and collaboration platforms for statistics on the overall use of potentially privacy-intrusive third-party web services.
- 
-      div.screenshot
-          span.scan AesirX Privacy Scan:
-          span.time Generated on 2023-05-03
-          img(src=`${jsondir}/screenshot-top.png` alt="Webpage Top Screenshot" id="fig:screenshot-top" style="width:100%")
+            div.link #{uri_ins}
+            div.link Violations found!
+            p This site appears to be breach of the GDPR, and is at risk of being fined. If this is your site, you should act fast to rectify this situation. Read below for details on what issues were discovered.
+  
+        div.screenshot
+            span.scan AesirX Privacy Scan:
+            span.time Generated on 2023-05-03
+            img(src=`${jsondir}/screenshot-top.png` alt="Webpage Top Screenshot" id="fig:screenshot-top" style="width:100%")
 
-    div.page
+    div.page2
 
       header#title-block-header
         div#logo
