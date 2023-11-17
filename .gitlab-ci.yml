@@ -1,0 +1,30 @@
+
+stages:
+  - docker
+
+build-docker:
+  services:
+    - docker:20-dind
+  only:
+    - master
+  except:
+    - schedules
+  stage: docker
+  image: docker:20
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  tags:
+    - docker
+  before_script:
+    # Docker warmup
+    - sleep 10
+    # Docker login
+    - docker login -u $DOCKER_USER -p $DOCKER_TOKEN
+  script:
+    - docker context create builder
+    - docker buildx create builder --use
+    - docker buildx build --platform linux/amd64,linux/arm64 --push --provenance=false -t aesirxio/website-evidence-collector:latest .
+
