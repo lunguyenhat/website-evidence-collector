@@ -135,6 +135,11 @@ function reporter(args) {
         path.join(c.args.output, "back_page_item_3.jpg")
       );
 
+      await fs.copyFile(
+        path.join(__dirname, "../assets") + "/back_page_item_4.jpg",
+        path.join(c.args.output, "back_page_item_4.jpg")
+      );
+
       const browser = await puppeteer.launch({
         // https://developer.chrome.com/articles/new-headless/.
         headless: "new",
