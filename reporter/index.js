@@ -105,10 +105,34 @@ function reporter(args) {
     pdffilename = "inspection.pdf"
   ) {
     if (c.args.pdf && c.args.output) {
-      
       await fs.copyFile(
         path.join(__dirname, "../assets") + "/aesirx_logo.png",
         path.join(c.args.output, "aesirx_logo.png")
+      );
+
+      await fs.copyFile(
+        path.join(__dirname, "../assets") + "/warning_icon.svg",
+        path.join(c.args.output, "warning_icon.svg")
+      );
+
+      await fs.copyFile(
+        path.join(__dirname, "../assets") + "/back_page_bg.png",
+        path.join(c.args.output, "back_page_bg.png")
+      );
+
+      await fs.copyFile(
+        path.join(__dirname, "../assets") + "/back_page_item_1.png",
+        path.join(c.args.output, "back_page_item_1.png")
+      );
+
+      await fs.copyFile(
+        path.join(__dirname, "../assets") + "/back_page_item_2.jpg",
+        path.join(c.args.output, "back_page_item_2.jpg")
+      );
+
+      await fs.copyFile(
+        path.join(__dirname, "../assets") + "/back_page_item_3.jpg",
+        path.join(c.args.output, "back_page_item_3.jpg")
       );
 
       const browser = await puppeteer.launch({
@@ -217,7 +241,6 @@ function reporter(args) {
   c.saveSource = function (source, filename = "source.html") {
     if (c.args.output) {
       fs.writeFileSync(path.join(c.args.output, filename), source);
-
     }
   };
 
