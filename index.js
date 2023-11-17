@@ -90,11 +90,17 @@ async function run(args, logger) {
 
   // store html on disk
   report.generateHtml(collect.output);
+
+  // paid
+  report.generateHtml(collect.output, "inspection_paid.html", true, "../assets/template.pug");
   
   // store docx on disk
   await report.generateOfficeDoc(collect.output);
 
   // convert html to pdf
+  await report.convertHtmlToPdf("inspection_paid.html", "inspection_paid.pdf");
+
+  // paid
   await report.convertHtmlToPdf();
 
   // store source on disk
