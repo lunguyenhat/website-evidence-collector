@@ -327,42 +327,38 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
 
       p Eventually, the evidence collection tool logged all identified web forms that potentially transmit web form data using an unencrypted connection.
 
-      h4 5 First-Party Hosts 
+      h4 First-Party Hosts
       
       ol
-        each host,index in hosts.requests.firstParty
-          if index < 5
-            li: a(href=`http://${host}`)= host
+        each host in hosts.requests.firstParty
+          li: a(href=`http://${host}`)= host
 
       p Requests have been made to #{hosts.requests.firstParty.length} distinct first-party hosts.
       
-      h4 5 Third-Party Hosts
+      h4 Third-Party Hosts
       
       ol
-        each host,index in hosts.requests.thirdParty
-          if index < 5
-            li: a(href=`http://${host}`)= host
+        each host in hosts.requests.thirdParty
+          li: a(href=`http://${host}`)= host
 
       p Requests have been made to #{hosts.requests.thirdParty.length} distinct third-party hosts.
 
-      h4 5 First-Party Web Beacon Hosts
+      h4 First-Party Web Beacon Hosts
       
       ol
-        each host,index in hosts.beacons.firstParty
-          if index < 5
-            li: a(href=`http://${host}`)= host
+        each host in hosts.beacons.firstParty
+          li: a(href=`http://${host}`)= host
 
       if hosts.beacons.firstParty.length > 0
         p Potential first-party web beacons were sent to #{hosts.beacons.firstParty.length} distinct hosts. Corresponding HTTP requests for first- and third-parties are listed in #[span.citation(data-cites="app:annex-beacons"): a(href="#app:annex-beacons") the Annex].
       else
         p No first-party web beacons were found.
 
-      h4 5 Third-Party Web Beacon Hosts
+      h4 Third-Party Web Beacon Hosts
       
       ol
-        each host,index in hosts.beacons.thirdParty
-          if index < 5
-            li: a(href=`http://${host}`)= host
+        each host in hosts.beacons.thirdParty
+          li: a(href=`http://${host}`)= host
           
       if hosts.beacons.thirdParty.length > 0
         p Potential third-party web beacons were sent to #{hosts.beacons.thirdParty.length} distinct hosts. Corresponding HTTP requests for first- and third-parties are listed in #[span.citation(data-cites="app:annex-beacons"): a(href="#app:annex-beacons") the Annex].
@@ -401,9 +397,9 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
       - var cookiesByStorage = groupBy(cookies, 'firstPartyStorage')
       
       each cookieList,index in {'First-Party': cookiesByStorage['true'] || [], 'Third-Party': cookiesByStorage['false'] || []}
-        h4 5 Cookies linked to #{index} Hosts
+        h4 Cookies linked to #{index} Hosts
       
-        if cookieList.length > 0 && index < 5
+        if cookieList.length > 0
           table.cookies(style="width: 100%;")
             colgroup
               col(width="0%")
@@ -472,7 +468,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
         each link in browsing_history
           li: a(href=link)= link
               
-      h2(id="app:annex-beacons") 5 Beacons
+      h2(id="app:annex-beacons") All Beacons
       
       p The data transmitted by beacons using HTTP GET parameters are decoded for improved readability and displayed beneath the beacon URL.
       
@@ -491,15 +487,14 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
               th.notrunc Freq.
           tbody
             each beacon,index in beacons
-              if index < 5
+              tr
+                td.notrunc= index+1
+                td.trunc(title=beacon.url)= beacon.url
+                td.notrunc= beacon.occurrances
+              if beacon.query
                 tr
-                  td.notrunc= index+1
-                  td.trunc(title=beacon.url)= beacon.url
-                  td.notrunc= beacon.occurrances
-                if beacon.query
-                  tr
-                    td.notrunc
-                    td.trunc.code(colspan=2): pre: code= JSON.stringify(beacon.query, null, 2).split("\n").slice(1,-1).join("\n").replace(/^  /mg , '')
+                  td.notrunc
+                  td.trunc.code(colspan=2): pre: code= JSON.stringify(beacon.query, null, 2).split("\n").slice(1,-1).join("\n").replace(/^  /mg , '')
       
       if testSSL
         - var results = testSSL.scanResult[0]
