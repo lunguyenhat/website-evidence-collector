@@ -11,6 +11,9 @@
 
 FROM alpine:3.15.0
 
+ARG UID=1010
+ARG GID=1010
+
 # Installs latest Chromium (77) package.
 RUN apk add --no-cache \
       chromium \
@@ -28,10 +31,10 @@ RUN apk add --no-cache \
       parallel jq grep aha
 
 # Add user so we don't need --no-sandbox and match first linux uid 1000
-RUN addgroup --system --gid 1012 nodejs \
-      && adduser --system --uid 1012 --ingroup nodejs --shell /bin/bash nextjs \
+RUN addgroup --system --gid $GID nextjs \
+      && adduser --system --uid $UID --ingroup nextjs --shell /bin/bash nextjs \
       && mkdir -p /output \
-      && chown -R nextjs:nodejs /output
+      && chown -R nextjs:nextjs /output
 
 COPY . /opt/website-evidence-collector/
 
