@@ -6,6 +6,7 @@ build-docker:
   services:
     - docker:20-dind
   only:
+    - dev
     - master
   except:
     - schedules
@@ -16,6 +17,10 @@ build-docker:
     DOCKER_TLS_CERTDIR: "/certs"
     DOCKER_TLS_VERIFY: 1
     DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+    UID: $UID
+    GID: $GID
+  environment:
+    name: $CI_COMMIT_BRANCH
   tags:
     - docker
   before_script:
@@ -24,7 +29,13 @@ build-docker:
     # Docker login
     - docker login -u $DOCKER_USER -p $DOCKER_TOKEN
   script:
+    - if [ "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH ]; then VERSION="latest"; else VERSION="dev"; fi
     - docker context create builder
     - docker buildx create builder --use
-    - docker buildx build --platform linux/amd64,linux/arm64 --push --provenance=false -t aesirxio/website-evidence-collector:latest .
+    - docker buildx build \
+      --platform=linux/amd64,linux/arm64 --push \
+      --provenance=false \
+      --build-arg UID=$UID \
+      --build-arg GID=$GID \
+      -t aesirxio/website-evidence-collector:$VERSION .
 
