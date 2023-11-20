@@ -108,11 +108,50 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
       .bg {
         background-color: #171e3a;
         color: #FFFFFF;
-        padding: 45px;
+        padding: 50px 0 0 50px;
       }
 
       #aesirx_logo img{
         background-color: unset;
+      }
+
+      .label_risk {
+        padding: 14px 32px 14px 18px;
+        background-color: #C8192E;
+        color: #fff;
+        font-size : 30px;
+        font-weight: 600;
+        border-radius: 110px;
+        line-height: 48px;
+      }
+
+      .heading_text {
+        font-size: 30px;
+        line-height: 48px;
+        color: #132342;
+        font-weight: 600;
+      }
+
+      .back_page {
+        padding: 40px;
+        position: relative;
+        background: #fff;
+        color: #222328;
+      }
+      .markdown-body a.link_style {
+        color: #0F674C;
+        font-weight: 600;
+        text-decoration: underline;
+      }
+      .button_style,  .markdown-body a.button_style {
+        background-color: #1AB394;
+        padding: 13px 24px;
+        color: #fff;
+        border-radius: 6px;
+        font-weight: 600;
+      }
+      .button_style:hover,  .markdown-body a.button_style:hover {
+        text-decoration: none;
       }
 
       @page {
@@ -149,15 +188,17 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
           img(src=`${jsondir}/aesirx_logo.png` style="height: 66px;width: 255px;")
 
         div.content
-            span.label High Risk
-
-            div.link #{uri_ins}
-            div.link Violations found!
-            p This site appears to be breach of the GDPR, and is at risk of being fined. If this is your site, you should act fast to rectify this situation. Read below for details on what issues were discovered.
+            div.link(style="margin: 70px 0 40px 0; font-size: 26px; font-weight: 500;") #{uri_ins}
+            span.label_risk
+              img(src=`${jsondir}/warning_icon.svg` style="height: 40px;width: 40px; background:none; vertical-align: middle; margin-right: 10px; margin-top: -5px")
+              span High Risk
+            div.link(style="margin: 30px 0 20px 0; font-size: 45px; font-weight: 600;") Violations found!
+            p(style="width: 88%; font-size: 26px; line-height: 44px;") This site appears to be breach of the GDPR, and is at risk of being fined. If this is your site, you should act fast to rectify this situation. Read below for details on what issues were discovered.
   
-        div.screenshot
-            span.scan AesirX Privacy Scan:
-            span.time Generated on 2023-05-03
+        div.screenshot(style="margin-top: 60px; margin-left: 64px;")
+            div(style="font-size: 18px; line-height: 22px; margin-bottom: 22px;")
+              div.scan AesirX Privacy Scan:
+              div.time Generated on 2023-05-03
             img(src=`${jsondir}/screenshot-top.png` alt="Webpage Top Screenshot" id="fig:screenshot-top" style="width:100%")
 
     div.page2
@@ -633,7 +674,30 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
 
       
     div.page
-      p back page
+      div.back_page
+        img(src=`${jsondir}/back_page_bg.png` style="width: 448px; position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 1; background: transparent;")
+        div.heading_text(style='width: 85%; text-align: center; margin: 65px auto 20px; z-index: 2;') Transforming marketing with innovative, privacy-focused solutions.
+        div(style='font-size: 15px; margin-bottom: 40px;')
+          p(style='color: #132342; margin-bottom: 15px; font-weight: 600;') AesirX stands as a bastion of strength, leading the fight for digital privacy against BigTech’s abuse of personal data!
+          p As the digital landscape changes, so do the challenges surrounding privacy and legal compliance. At AesirX, we understand the concerns that businesses face when it comes to navigating complex privacy laws. We firmly believe that no business owner should unknowingly use illegal technology and risk being labeled a criminal.
+            a.link_style(href='https://aesirx.io/about-us', style='display: inline-block; font-size: 15px; margin-left: 5px;') Learn More.
+        div(style='display: flex; margin-left: -20px; margin-right: -20px; margin-bottom: 30px;')
+          div(style='width: 50%; padding-left: 20px; padding-right: 20px; font-size: 15px;')
+            div(style='color: #132342; font-size: 20px; margin-bottom: 10px; font-weight: 600;') Privacy Compliance Review
+            p(style='margin-bottom: 0;') A Transformative Journey Towards Exemplary Privacy Standards
+            p(style='margin-bottom: 10px;') Our Introductory Privacy Review is designed as a comprehensive, in-depth analysis of your organization's current stance on privacy. 
+            p(style='margin-bottom: 20px;') Priced at $2,495, this service is not merely an audit but a transformative journey that will elevate your commitment to privacy to new heights. It's a meticulous process where we dissect and analyze every facet of your privacy framework, providing insights and recommendations that are both actionable and strategic.
+            a.button_style(href='https://privacyscanner.aesirx.io/') Order Compliance Review
+          div(style='width: 50%; padding-left: 20px; padding-right: 20px;')
+            img(src=`${jsondir}/back_page_item_1.png` style="width: 100%;")
+        div(style='display: flex;')
+          div(style='width: 100%; font-size: 15px;')
+            div(style='position:relative;')
+              div(style='position: absolute; top: 50%; left: 24px; transform: translateY(-50%); width: 40%; color: #fff;')
+                div(style="font-size: 13px;") AESIRX ANALYTICS
+                p(style='font-size: 15px; margin-bottom: 20px;') A free and open source fully privacy compliant web analytics solution.
+                a.button_style(href='https://github.com/aesirxio/analytics/releases') Download
+              img(src=`${jsondir}/back_page_item_4.jpg` style="width: 100%;")
 
 
     script.
