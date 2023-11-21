@@ -188,13 +188,15 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
           img(src=`${jsondir}/aesirx_logo.png` style="height: 66px;width: 255px;")
 
         div.content
+            - var thirdPartyCookies = cookies.filter((item) => !item.firstPartyStorage);
+            - var isLowRisk = (hosts.beacons.firstParty.length === 0 && hosts.beacons.thirdParty.length === 0) && thirdPartyCookies.length === 0
             div.link(style="margin: 70px 0 40px 0; font-size: 26px; font-weight: 500;") #{uri_ins}
-            span.label_risk
+            span(class= isLowRisk ? "label_risk low" : "label_risk high")
               img(src=`${jsondir}/warning_icon.svg` style="height: 40px;width: 40px; background:none; vertical-align: middle; margin-right: 10px; margin-top: -5px")
-              span High Risk
-            div.link(style="margin: 30px 0 20px 0; font-size: 45px; font-weight: 600;") Violations found!
-            p(style="width: 88%; font-size: 26px; line-height: 44px;") This site appears to be breach of the GDPR, and is at risk of being fined. If this is your site, you should act fast to rectify this situation. Read below for details on what issues were discovered.
-  
+              span #{isLowRisk ? "Low Risk": "High Risk"}
+            div.link(style="margin: 30px 0 20px 0; font-size: 45px; font-weight: 600;") #{isLowRisk ? "No violations found!": "Violations found!"}
+            p(style="width: 88%; font-size: 26px; line-height: 44px;") #{isLowRisk ? "This site does not appear to be in breach of the GDPR. If this is your site, you might still want to consider ordering a manual privacy compliance review to ensure you are not in breach of any other privacy regulations.": "This site appears to be breach of the GDPR, and is at risk of being fined. If this is your site, you should act fast to rectify this situation. Read below for details on what issues were discovered."} 
+            
         div.screenshot(style="margin-top: 60px; margin-left: 64px;")
             div(style="font-size: 18px; line-height: 22px; margin-bottom: 22px;")
               div.scan AesirX Privacy Scan:
