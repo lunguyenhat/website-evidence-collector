@@ -192,7 +192,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
 
         div.content
             - var thirdPartyCookies = cookies.filter((item) => !item.firstPartyStorage);
-            - var isLowRisk = hosts.beacons.firstParty.length === 0 && thirdPartyCookies.length === 0
+            - var isLowRisk = (hosts.beacons.firstParty.length === 0 && hosts.beacons.thirdParty.length === 0) && thirdPartyCookies.length === 0
             div.link(style="margin: 70px 0 40px 0; font-size: 26px; font-weight: 500;") #{uri_ins}
             span(class= isLowRisk ? "label_risk low" : "label_risk high")
               img(src=`${jsondir}/warning_icon.svg` style="height: 40px;width: 40px; background:none; vertical-align: middle; margin-right: 10px; margin-top: -5px")
